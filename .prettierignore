@@ -1,0 +1,17 @@
+node_modules/
+docs/
+.history/
+tmp/
+temp/
+tasks/
+README.md
+yarn.lock
+package-lock.json
+docker-compose.yml
+old/
+.env
+.env.example
+.env.test
+build
+scripts
+tests

@@ -1,0 +1,10 @@
+node_modules
+docs
+scripts
+.history
+jest.config.js
+tests
+.vscode
+debug.js
+sequelize-ui
+build

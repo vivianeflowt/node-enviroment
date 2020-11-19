@@ -1,0 +1,55 @@
+{
+  "name": "node-env",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node ./src/index.js",
+    "dev": "nodemon --exec npm run babel-node -- ./src/index.js",
+    "build": "npx babel ./src --out-dir ./build",
+    "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'",
+    "format": "npx prettier --write .",
+    "eslint": "npx eslint --fix ",
+    "docker-up": "./docker-up",
+    "docker-down": "./docker-down",
+    "test": "jest",
+    "test-menu": "jest --watch"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@logger": "./utils/logger/logger.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vivianeflowt/SNART-APP-SH.git"
+  },
+  "author": "Viviane Florido <vivianeflowt@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vivianeflowt/SNART-APP-SH/issues"
+  },
+  "homepage": "https://github.com/vivianeflowt/SNART-APP-SH#readme",
+  "devDependencies": {
+    "@babel/cli": "7.12.1",
+    "@babel/core": "7.12.3",
+    "@babel/eslint-parser": "7.12.1",
+    "@babel/node": "7.12.6",
+    "@babel/preset-env": "7.12.1",
+    "babel-eslint": "10.1.0",
+    "eslint": "7.13.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-plugin-import": "2.22.1",
+    "jest": "26.6.3",
+    "nodemon": "2.0.6",
+    "prettier": "2.1.2"
+  },
+  "dependencies": {
+    "dotenv": "8.2.0",
+    "fast-file-rotate": "1.0.1",
+    "module-alias": "2.2.2",
+    "winston": "3.3.3"
+  }
+}

@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+clear
+NODE_ENV=development
+docker-compose up -d
+sleep 2
+echo "MONGO-EXPRESS : http://localhost:8081"
