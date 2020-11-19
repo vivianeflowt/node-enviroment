@@ -10,17 +10,15 @@
     "start": "node ./src/index.js",
     "dev": "nodemon --exec npm run babel-node -- ./src/index.js",
     "build": "npx babel ./src --out-dir ./build",
+    "bundle": "npx browserify ./src/index.js -t babelify --outfile ./public/bundle.js",
     "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'",
+    "gulp": "npx gulp",
     "format": "npx prettier --write .",
     "eslint": "npx eslint --fix ",
     "docker-up": "./docker-up",
     "docker-down": "./docker-down",
     "test": "jest",
     "test-menu": "jest --watch"
-  },
-  "_moduleAliases": {
-    "@root": ".",
-    "@logger": "./utils/logger/logger.js"
   },
   "repository": {
     "type": "git",
@@ -39,9 +37,11 @@
     "@babel/node": "7.12.6",
     "@babel/preset-env": "7.12.1",
     "babel-eslint": "10.1.0",
+    "babelify": "10.0.0",
     "eslint": "7.13.0",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-plugin-import": "2.22.1",
+    "gulp": "4.0.2",
     "jest": "26.6.3",
     "nodemon": "2.0.6",
     "prettier": "2.1.2"
@@ -49,7 +49,7 @@
   "dependencies": {
     "dotenv": "8.2.0",
     "fast-file-rotate": "1.0.1",
-    "module-alias": "2.2.2",
+    "shelljs": "0.8.4",
     "winston": "3.3.3"
   }
 }

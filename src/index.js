@@ -1,24 +1,18 @@
-/* eslint-disable */
-("use strict");
-require("@babel/core").transform("code", {
-  presets: ["@babel/preset-env"],
-});
-/* eslint-enable */
+"use strict";
 
-require("module-alias/register");
-require("dotenv").config();
+//require("dotenv").config();
 
 /* eslint-disable */
-const logger = require("@logger");
+//const logger = require("logger");
 /* eslint-enable */
 
-logger.log("app", "start");
+//logger.log("app", "start");
 
-class Test {
-  debug() {
-    console.log("debug");
+class Debug {
+  log(text = "") {
+    console.log(text);
   }
 }
-const t = new Test();
+const debug = new Debug();
 
-t.debug();
+debug.log("testing...");
