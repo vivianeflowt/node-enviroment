@@ -2,7 +2,7 @@
   "name": "node-env",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
   "directories": {
     "doc": "docs"
   },
@@ -20,16 +20,6 @@
     "test": "jest",
     "test-menu": "jest --watch"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vivianeflowt/SNART-APP-SH.git"
-  },
-  "author": "Viviane Florido <vivianeflowt@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/vivianeflowt/SNART-APP-SH/issues"
-  },
-  "homepage": "https://github.com/vivianeflowt/SNART-APP-SH#readme",
   "devDependencies": {
     "@babel/cli": "7.12.1",
     "@babel/core": "7.12.3",
@@ -48,8 +38,6 @@
   },
   "dependencies": {
     "dotenv": "8.2.0",
-    "fast-file-rotate": "1.0.1",
-    "shelljs": "0.8.4",
-    "winston": "3.3.3"
+    "shelljs": "0.8.4"
   }
 }

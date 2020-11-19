@@ -3,10 +3,7 @@
 //require("dotenv").config();
 
 /* eslint-disable */
-//const logger = require("logger");
 /* eslint-enable */
-
-//logger.log("app", "start");
 
 class Debug {
   log(text = "") {
