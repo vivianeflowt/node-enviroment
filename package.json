@@ -8,10 +8,10 @@
   },
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": "nodemon --exec npm run babel-node -- ./src/index.js",
+    "dev": "npx nodemon --exec npm run babel-node -- ./src/index.js",
     "build": "npx babel ./src --out-dir ./build",
     "bundle": "npx browserify ./src/index.js -t babelify --outfile ./public/bundle.js",
-    "babel-node": "babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'",
+    "babel-node": "npx babel-node --presets='@babel/preset-env' --ignore='foo|bar|baz'",
     "gulp": "npx gulp",
     "format": "npx prettier --write .",
     "eslint": "npx eslint --fix ",
