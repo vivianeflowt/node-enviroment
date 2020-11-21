@@ -1,9 +1,6 @@
 const gulp = require("gulp");
 const shell = require("shelljs");
-
-const config = {
-  browserify: true,
-};
+const clean = require("gulp-clean");
 
 gulp.task("default", function (done) {
   console.log("default");
@@ -11,7 +8,7 @@ gulp.task("default", function (done) {
 });
 
 gulp.task("clean", function () {
-  console.log("clean");
+  gulp.console.log("clean");
 });
 
 // Message
@@ -30,6 +27,10 @@ gulp.task("browserify", function (done) {
     }
   });
   done();
+});
+
+gulp.task("default", function () {
+  return gulp.src("build/*", { read: false }).pipe(clean());
 });
 
 // exports.default = function () {
