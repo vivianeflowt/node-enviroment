@@ -16,7 +16,6 @@ const buildBundle = (done) => {
   done();
 };
 
-/// babel build
 const buildApp = (done) => {
   run("npx babel ./src --out-dir ./build").exec();
   done();
@@ -27,10 +26,8 @@ gulp.task("default", function (done) {
   done();
 });
 
-// browserify bundle
 gulp.task("browserify", buildBundle);
 
-// browserify autoloader
 gulp.task("browserify-watch", (done) => {
   gulp.watch("./src/index.js", buildBundle);
   done();
