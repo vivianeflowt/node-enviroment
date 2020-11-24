@@ -5,11 +5,4 @@
 /* eslint-disable */
 /* eslint-enable */
 
-class Debug {
-  log(text = "") {
-    console.log(text);
-  }
-}
-const debug = new Debug();
-
-debug.log("testing...");
+console.log("node-env");
