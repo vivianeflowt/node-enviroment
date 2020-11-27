@@ -3,7 +3,6 @@ docs/
 .history/
 tmp/
 temp/
-tasks/
 README.md
 yarn.lock
 package-lock.json

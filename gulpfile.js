@@ -1,67 +1,50 @@
 const gulp = require("gulp");
 const clean = require("gulp-clean");
-const cleanCSS = require("gulp-clean-css");
 const run = require("gulp-run");
-const rename = require("gulp-rename");
-const concat = require("gulp-concat");
-const babel = require("gulp-babel");
 const watch = require("gulp-watch");
-const browserify = require("gulp-browserify");
 const browserSync = require("browser-sync");
+const babel = require("gulp-babel");
 
-const buildBundle = (done) => {
-  run(
-    "browserify ./src/index.js -t babelify --outfile ./build/bundle.js"
-  ).exec();
-  done();
-};
+// const buildApp = (done) => {
+//   run("npx babel ./src --out-dir ./build").exec();
+//   done();
+// };
 
-const buildApp = (done) => {
-  run("npx babel ./src --out-dir ./build").exec();
-  done();
-};
-
-gulp.task("default", function (done) {
-  console.log("default");
+gulp.task("clean", function (done) {
+  gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
+  gulp.src("./dist/**/*.js", { read: false }).pipe(clean({ force: true }));
   done();
 });
 
-gulp.task("browserify", buildBundle);
-
-gulp.task("browserify-watch", (done) => {
-  gulp.watch("./src/index.js", buildBundle);
-  done();
-});
-
-gulp.task("babel", buildApp);
-
-gulp.task("clean", (done) => {
-  gulp.src("build/*.js", { read: false }).pipe(clean({ force: true }));
-  gulp.src("build/*.css", { read: false }).pipe(clean({ force: true }));
-  done();
-});
-
-gulp.task("concat", function (done) {
-  gulp.src("./src/*.js").pipe(concat("all.js")).pipe(gulp.dest("./build"));
-  done();
-});
-
-gulp.task("css", (done) => {
+gulp.task("babel", function (done) {
   gulp
-    .src("styles/*.css")
+    .src("src/index.js")
     .pipe(
-      cleanCSS({ debug: true }, (details) => {
-        console.log(`${details.name}: ${details.stats.originalSize}`);
-        console.log(`${details.name}: ${details.stats.minifiedSize}`);
+      babel({
+        presets: ["@babel/env"],
       })
     )
-    .pipe(gulp.dest("build/"));
+    .pipe(gulp.dest("dist"));
   done();
 });
 
-exports.default = (done) => {
-  console.log("Gulp is running...");
-  gulp.src("build/*.js", { read: false }).pipe(clean({ force: true }));
-  gulp.src("build/*.css", { read: false }).pipe(clean({ force: true }));
+gulp.task("bundle", (done) => {
+  run(
+    "browserify ./src/index.js -t babelify --outfile ./dist/bundle.js"
+  ).exec();
   done();
-};
+});
+
+gulp.task("default", gulp.series("clean", "bundle"), function (done) {
+  done();
+});
+
+// gulp.task("browserify-watch", (done) => {
+//   gulp.watch("./src/index.js", buildBundle);
+//   done();
+// });
+
+// gulp.task("babel", (done) => {
+//   run("npx babel ./src --out-dir ./build").exec();
+//   done();
+// });

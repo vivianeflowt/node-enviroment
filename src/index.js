@@ -1,9 +1,9 @@
 "use strict";
 
 //require("dotenv").config();
-
 /* eslint-disable */
 /* eslint-enable */
+require('./lib')
 
 class Debug {
   log(text = "") {
