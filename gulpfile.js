@@ -17,6 +17,11 @@ gulp.task("clean", function (done) {
   done();
 });
 
+gulp.task("clean-css", function (done) {
+  gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
+  done();
+});
+
 gulp.task("clean-bundle", function (done) {
   gulp.src("./dist/bundle.js", { read: false }).pipe(clean({ force: true }));
   done();
@@ -92,6 +97,11 @@ gulp.task("dist", gulp.series("clean", "babel"), (done) => {
 
 gulp.task("web-watch", (done) => {
   gulp.watch("./src/**/*.js", gulp.series("clean-bundle", "bundle"));
+  gulp.watch(
+    "./src/**/*.css",
+    gulp.series("clean-css", "css-min", "css-concat")
+  );
+
   done();
 });
 
