@@ -11,19 +11,19 @@ const rename = require("gulp-rename");
 
 sass.compiler = require("node-sass");
 
-gulp.task("clean", function (done) {
+gulp.task("clean", (done) => {
   gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
   gulp.src("./dist/**/*.js", { read: false }).pipe(clean({ force: true }));
   //gulp.src("./dist/**/*", { read: false }).pipe(clean({ force: true }));
   done();
 });
 
-gulp.task("clean-css", function (done) {
+gulp.task("clean-css", (done) => {
   gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
   done();
 });
 
-gulp.task("clean-bundle", function (done) {
+gulp.task("clean-bundle", (done) => {
   gulp.src("./dist/bundle.js", { read: false }).pipe(clean({ force: true }));
   done();
 });
