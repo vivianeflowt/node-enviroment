@@ -1,3 +1,3 @@
+//require("./teste/teste");
 
-
-console.log('lib!')
+console.log("lib!");

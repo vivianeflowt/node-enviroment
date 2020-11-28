@@ -1,24 +1,25 @@
 const gulp = require("gulp");
 const clean = require("gulp-clean");
 const run = require("gulp-run");
-const watch = require("gulp-watch");
+const gulpWatch = require("gulp-watch");
 const browserSync = require("browser-sync");
 const babel = require("gulp-babel");
-
-// const buildApp = (done) => {
-//   run("npx babel ./src --out-dir ./build").exec();
-//   done();
-// };
+const sass = require("gulp-sass");
+const concat = require("gulp-concat");
+const cssmin = require("gulp-cssmin");
+const rename = require("gulp-rename");
+const pipeline = require("readable-stream").pipeline;
 
 gulp.task("clean", function (done) {
   gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
   gulp.src("./dist/**/*.js", { read: false }).pipe(clean({ force: true }));
+  //gulp.src("./dist/**/*", { read: false }).pipe(clean({ force: true }));
   done();
 });
 
-gulp.task("babel", function (done) {
+gulp.task("babel", (done) => {
   gulp
-    .src("src/index.js")
+    .src("src/**/*.js")
     .pipe(
       babel({
         presets: ["@babel/env"],
@@ -35,16 +36,60 @@ gulp.task("bundle", (done) => {
   done();
 });
 
-gulp.task("default", gulp.series("clean", "bundle"), function (done) {
+gulp.task("css-min", (done) => {
+  gulp
+    .src("./src/**/*.css")
+    .pipe(concat("styles.css"))
+    .pipe(cssmin())
+    .pipe(rename({ suffix: ".min" }))
+    .pipe(gulp.dest("./dist"));
   done();
 });
 
-// gulp.task("browserify-watch", (done) => {
-//   gulp.watch("./src/index.js", buildBundle);
-//   done();
-// });
+gulp.task("css-concat", (done) => {
+  gulp
+    .src("./src/**/*.css")
+    .pipe(concat("styles.css"))
+    .pipe(gulp.dest("./dist"));
+  done();
+});
 
-// gulp.task("babel", (done) => {
-//   run("npx babel ./src --out-dir ./build").exec();
-//   done();
-// });
+gulp.task("js-uglify", (done) => {
+  done();
+});
+
+gulp.task("js-concat", (done) => {
+  gulp
+    .src("./src/**/*.js")
+    .pipe(concat("scripts.js"))
+    .pipe(gulp.dest("./dist"));
+  done();
+});
+
+gulp.task(
+  "dist-web",
+  gulp.series(
+    "clean",
+    "js-concat",
+    "js-uglify",
+    "css-concat",
+    "css-min",
+    "bundle"
+  ),
+  (done) => {
+    done();
+  }
+);
+
+gulp.task("dist", gulp.series("clean", "babel"), (done) => {
+  done();
+});
+
+gulp.task("web-watch", gulp.series("clean", "babel"), (done) => {
+  gulp.watch("./src/**/*.js");
+  done();
+});
+
+gulp.task("default", gulp.series("dist-web"), (done) => {
+  done();
+});

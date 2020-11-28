@@ -1,18 +1,12 @@
-function getChange(productValue, payment) {
+function getChange(payable, paid) {
   const coins = [200, 100, 50, 20, 10, 5, 2, 1];
-  const res = [];
-  let amount = payment - productValue;
-  console.log(amount);
+  const change = [];
+  const { length } = coins;
+  let remaining = paid - payable;
 
-  for (let i = 0; i < coins.length; i++) {
-    console.log(coins[i]);
-    while (amount >= coins[i]) {
-      amount -= coins[i];
-      res.push(coins[i]);
-    }
-  }
+  // escreva seu código aqui...
 
-  return res;
+  return change;
 }
 
-console.log(getChange(10, 60));
+console.log(getChange(100, 23));
