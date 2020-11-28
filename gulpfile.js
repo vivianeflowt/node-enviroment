@@ -17,6 +17,11 @@ gulp.task("clean", function (done) {
   done();
 });
 
+gulp.task("clean-bundle", function (done) {
+  gulp.src("./dist/bundle.js", { read: false }).pipe(clean({ force: true }));
+  done();
+});
+
 gulp.task("babel", (done) => {
   gulp
     .src("src/**/*.js")
@@ -85,7 +90,7 @@ gulp.task("dist", gulp.series("clean", "babel"), (done) => {
   done();
 });
 
-gulp.task("web-watch", gulp.series("clean", "babel"), (done) => {
+gulp.task("web-watch", gulp.series("clean-bundle", "bundle"), (done) => {
   gulp.watch("./src/**/*.js");
   done();
 });
