@@ -12,14 +12,22 @@ const rename = require("gulp-rename");
 sass.compiler = require("node-sass");
 
 gulp.task("clean", (done) => {
-  gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
-  gulp.src("./dist/**/*.js", { read: false }).pipe(clean({ force: true }));
-  //gulp.src("./dist/**/*", { read: false }).pipe(clean({ force: true }));
+  gulp.src("./dist/**/*", { read: false }).pipe(clean({ force: true }));
   done();
 });
 
 gulp.task("clean-css", (done) => {
   gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
+  done();
+});
+
+gulp.task("clean-js", (done) => {
+  gulp.src("./dist/**/*.js", { read: false }).pipe(clean({ force: true }));
+  done();
+});
+
+gulp.task("clean-html", (done) => {
+  gulp.src("./dist/**/*.html", { read: false }).pipe(clean({ force: true }));
   done();
 });
 
@@ -60,9 +68,18 @@ gulp.task("sass-comp", (done) => {
   done();
 });
 
-gulp.task("dist-web", gulp.series("clean", "sass-comp", "bundle"), (done) => {
+gulp.task("html-comp", (done) => {
+  gulp.src("./src/**/*.html").pipe(gulp.dest("./dist"));
   done();
 });
+
+gulp.task(
+  "dist-web",
+  gulp.series("clean", "html-comp", "sass-comp", "bundle"),
+  (done) => {
+    done();
+  }
+);
 
 gulp.task("dist", gulp.series("clean", "babel"), (done) => {
   done();
@@ -72,7 +89,6 @@ gulp.task("web-watch", (done) => {
   gulp.watch("./src/**/*.js", gulp.series("clean-bundle", "bundle"));
   gulp.watch("./src/**/*.css", gulp.series("clean-css", "sass-comp"));
   gulp.watch("./src/**/*.scss", gulp.series("clean-css", "sass-comp"));
-
   done();
 });
 
