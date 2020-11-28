@@ -49,7 +49,7 @@ gulp.task("bundle", (done) => {
 
 gulp.task("sass-comp", (done) => {
   gulp
-    .src("./sass/**/*.scss")
+    .src("./src/**/*.scss")
     .pipe(concat("style.scss"))
     .pipe(sass().on("error", sass.logError))
     .pipe(gulp.src("./src/**/*.css"))
