@@ -101,7 +101,6 @@ gulp.task("web-watch", (done) => {
     "./src/**/*.css",
     gulp.series("clean-css", "css-min", "css-concat")
   );
-
   done();
 });
 

@@ -14,7 +14,7 @@
     "format": "npx prettier --write .",
     "eslint": "npx eslint --fix ",
     "test": "jest",
-    "test-menu": "jest --watch"
+    "test-watch": "jest --watch"
   },
   "devDependencies": {
     "@babel/cli": "7.12.1",
