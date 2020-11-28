@@ -8,7 +8,8 @@ const sass = require("gulp-sass");
 const concat = require("gulp-concat");
 const cssmin = require("gulp-cssmin");
 const rename = require("gulp-rename");
-const pipeline = require("readable-stream").pipeline;
+
+sass.compiler = require("node-sass");
 
 gulp.task("clean", function (done) {
   gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
@@ -46,43 +47,22 @@ gulp.task("bundle", (done) => {
   done();
 });
 
-gulp.task("css-min", (done) => {
+gulp.task("sass-comp", (done) => {
   gulp
-    .src("./src/**/*.css")
-    .pipe(concat("styles.css"))
+    .src("./sass/**/*.scss")
+    .pipe(concat("style.scss"))
+    .pipe(sass().on("error", sass.logError))
+    .pipe(gulp.src("./src/**/*.css"))
+    .pipe(concat("style.css"))
     .pipe(cssmin())
     .pipe(rename({ suffix: ".min" }))
     .pipe(gulp.dest("./dist"));
   done();
 });
 
-gulp.task("css-concat", (done) => {
-  gulp
-    .src("./src/**/*.css")
-    .pipe(concat("styles.css"))
-    .pipe(gulp.dest("./dist"));
+gulp.task("dist-web", gulp.series("clean", "sass-comp", "bundle"), (done) => {
   done();
 });
-
-gulp.task("js-uglify", (done) => {
-  done();
-});
-
-gulp.task("js-concat", (done) => {
-  gulp
-    .src("./src/**/*.js")
-    .pipe(concat("scripts.js"))
-    .pipe(gulp.dest("./dist"));
-  done();
-});
-
-gulp.task(
-  "dist-web",
-  gulp.series("clean", "css-concat", "css-min", "bundle"),
-  (done) => {
-    done();
-  }
-);
 
 gulp.task("dist", gulp.series("clean", "babel"), (done) => {
   done();
@@ -90,10 +70,9 @@ gulp.task("dist", gulp.series("clean", "babel"), (done) => {
 
 gulp.task("web-watch", (done) => {
   gulp.watch("./src/**/*.js", gulp.series("clean-bundle", "bundle"));
-  gulp.watch(
-    "./src/**/*.css",
-    gulp.series("clean-css", "css-min", "css-concat")
-  );
+  gulp.watch("./src/**/*.css", gulp.series("clean-css", "sass-comp"));
+  gulp.watch("./src/**/*.scss", gulp.series("clean-css", "sass-comp"));
+
   done();
 });
 
