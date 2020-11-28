@@ -1,13 +1,15 @@
 //require("dotenv").config();
 /* eslint-disable */
 /* eslint-enable */
-//require('./lib')
+require("./lib");
 
-class Debug {
-  log(text = "") {
-    console.log(text);
-  }
-}
-const debug = new Debug();
+// class Debug {
+//   log(text = "") {
+//     console.log(text);
+//   }
+// }
+// const debug = new Debug();
 
-debug.log("testing...");
+// debug.log("testing...");
+
+console.log("1");

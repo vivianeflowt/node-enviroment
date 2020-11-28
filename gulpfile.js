@@ -78,14 +78,7 @@ gulp.task("js-concat", (done) => {
 
 gulp.task(
   "dist-web",
-  gulp.series(
-    "clean",
-    "js-concat",
-    "js-uglify",
-    "css-concat",
-    "css-min",
-    "bundle"
-  ),
+  gulp.series("clean", "css-concat", "css-min", "bundle"),
   (done) => {
     done();
   }
