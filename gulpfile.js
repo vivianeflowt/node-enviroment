@@ -90,8 +90,8 @@ gulp.task("dist", gulp.series("clean", "babel"), (done) => {
   done();
 });
 
-gulp.task("web-watch", gulp.series("clean-bundle", "bundle"), (done) => {
-  gulp.watch("./src/**/*.js");
+gulp.task("web-watch", (done) => {
+  gulp.watch("./src/**/*.js", gulp.series("clean-bundle", "bundle"));
   done();
 });
 
