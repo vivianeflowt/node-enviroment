@@ -17,6 +17,7 @@ const reactify = require("reactify");
 const autoprefixer = require("gulp-autoprefixer");
 const gulpif = require("gulp-if");
 const inject = require("gulp-inject");
+const flatten = require("gulp-flatten");
 
 const browserSync = require("browser-sync").create();
 const reload = browserSync.reload;
@@ -110,15 +111,17 @@ gulp.task("js:vendor", () => {
 gulp.task("sass:comp", () => {
   return gulp
     .src("./src/**/*.scss")
-    .pipe(gulp.src("./src/**/*.css"))
     .pipe(sourcemaps.init())
-    .pipe(concat("style.css"))
+    .pipe(concat("style.scss"))
     .pipe(gulpif(!config.style.comments, strip()))
     .pipe(sass({ style: "compressed" }).on("error", sass.logError))
+    .pipe(gulp.src("./src/**/*.css"))
+    .pipe(concat("style.css"))
     .pipe(autoprefixer({ cascade: false }))
     .pipe(cleanCSS({ compatibility: "ie8" }))
     .pipe(rename({ suffix: ".min" }))
     .pipe(sourcemaps.write("./"))
+    .pipe(flatten())
     .pipe(gulp.dest("./build/css"));
 });
 
