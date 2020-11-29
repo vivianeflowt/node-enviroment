@@ -31,7 +31,7 @@ const config = {
       config: {
         ie8: false,
         compress: {
-          drop_console: true,
+          drop_console: false,
         },
       },
     },

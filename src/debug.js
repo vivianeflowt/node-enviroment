@@ -2,7 +2,7 @@ let counter = 0;
 
 setTimeout(() => {
   try {
-    document.body.innerHTML += "<p> console debug... </p>";
+    document.body.innerHTML += "<br><p> console debug... </p>";
     setInterval(() => {
       try {
         console.log(`[${counter}] Debug...`);
@@ -14,6 +14,6 @@ setTimeout(() => {
   } catch (error) {
     console.log(error);
   }
-}, 3000);
+}, 5000);
 
 //
