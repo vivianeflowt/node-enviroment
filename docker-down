@@ -1,5 +1,0 @@
-#!/bin/zsh
-
-clear
-docker-compose down
-sleep 2

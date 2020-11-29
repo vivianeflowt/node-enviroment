@@ -1,8 +1,0 @@
-#!/bin/bash
-
-clear
-
-npm install
-wait
-npm audit fix
-wait
