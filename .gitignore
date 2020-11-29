@@ -13,3 +13,5 @@ docker-compose.yml
 .env.example
 .env.test
 tests
+dist
+build
