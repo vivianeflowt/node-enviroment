@@ -1,7 +1,6 @@
 const gulp = require("gulp");
 const clean = require("gulp-clean");
 const run = require("gulp-run");
-const gulpWatch = require("gulp-watch");
 const babel = require("gulp-babel");
 const sass = require("gulp-sass");
 const concat = require("gulp-concat");
@@ -21,31 +20,37 @@ const reload = browserSync.reload;
 
 sass.compiler = require("node-sass");
 
+// const paths = {
+//   styles: ["src/**/*.css", "src/**/*.scss"],
+//   scripts: {
+//     coffee: ["app/assets/scripts/**/*.coffee"],
+//     js: ["app/assets/scripts/vendor/**/*.js", "app/assets/scripts/**/*.js"],
+//   },
+//   images: ["app/assets/images/**/*"],
+//   fonts: ["app/assets/fonts/**/*"],
+// };
+
 gulp.task("clean", (done) => {
-  gulp.src("./dist/**/*", { read: false }).pipe(clean({ force: true }));
-  done();
+  gulp.src("./dist/*").pipe(clean({ force: true }));
+  setTimeout(() => {
+    done();
+  }, 1000);
 });
 
-gulp.task("clean:css", (done) => {
-  gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
-  done();
+gulp.task("clean:css", () => {
+  return gulp.src("./dist/**/*.css").pipe(clean({ force: true }));
 });
 
-gulp.task("clean:js", (done) => {
-  gulp
-    .src("./dist/**/*.js.map", { read: false })
-    .pipe(gulp.src("./dist/**/*.js", { read: false }))
-    .pipe(clean({ force: true }));
-  done();
+gulp.task("clean:js", () => {
+  return gulp.src("./dist/**/*.js").pipe(clean({ force: true }));
 });
 
-gulp.task("clean:html", (done) => {
-  gulp.src("./dist/**/*.html", { read: false }).pipe(clean({ force: true }));
-  done();
+gulp.task("clean:html", () => {
+  return gulp.src("./dist/**/*.html").pipe(clean({ force: true }));
 });
 
-gulp.task("babel", (done) => {
-  gulp
+gulp.task("babel", () => {
+  return gulp
     .src("src/**/*.js")
     .pipe(
       babel({
@@ -53,65 +58,65 @@ gulp.task("babel", (done) => {
       })
     )
     .pipe(gulp.dest("dist"));
-  done();
 });
 
-gulp.task("js:comp", (done) => {
+gulp.task("js:comp", () => {
   const bundler = browserify({
     entries: "./src/index.js",
     debug: true,
     // defining transforms here will avoid crashing your stream
     transform: [reactify],
   });
-  bundler
-    .bundle()
-    .pipe(source("app.js"))
-    .pipe(buffer())
-    .pipe(
-      babel({
-        presets: ["@babel/env"],
-      })
-    )
-    .pipe(sourcemaps.init({ loadMaps: true }))
-    // Add transformation tasks to the pipeline here.
-    .pipe(uglify())
-    .pipe(strip())
-    .on("error", log.error)
-    .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest("./dist/js"));
-  done();
+  return (
+    bundler
+      .bundle()
+      .pipe(source("app.js"))
+      .pipe(buffer())
+      .pipe(
+        babel({
+          presets: ["@babel/env"],
+        })
+      )
+      .pipe(sourcemaps.init({ loadMaps: true }))
+      // Add transformation tasks to the pipeline here.
+      .pipe(uglify())
+      .pipe(strip())
+      .on("error", log.error)
+      .pipe(sourcemaps.write("./"))
+      .pipe(gulp.dest("./dist/js"))
+  );
+  //done();
 });
 
-gulp.task("sass:comp", (done) => {
-  gulp
+gulp.task("sass:comp", () => {
+  return gulp
     .src("./src/**/*.scss")
-    .pipe(concat("style.scss"))
-    .pipe(sass().on("error", sass.logError))
     .pipe(gulp.src("./src/**/*.css"))
+    .pipe(sourcemaps.init())
     .pipe(concat("style.css"))
+    .pipe(sass().on("error", sass.logError))
     .pipe(strip())
     .pipe(cssmin())
     .pipe(rename({ suffix: ".min" }))
+    .pipe(sourcemaps.write("./"))
     .pipe(gulp.dest("./dist/css"));
-  done();
 });
 
-gulp.task("html:comp", (done) => {
-  gulp.src("./src/**/*.html").pipe(strip()).pipe(gulp.dest("./dist"));
-  done();
+gulp.task("html:comp", () => {
+  return gulp
+    .src("./src/**/*.html")
+    .pipe(sourcemaps.init())
+    .pipe(strip())
+    .pipe(sourcemaps.write("./"))
+    .pipe(gulp.dest("./dist"));
 });
 
 gulp.task(
   "dist:web",
-  gulp.series(["clean", "html:comp", "sass:comp", "js:comp"]),
-  (done) => {
-    done();
-  }
+  gulp.series(["clean", "html:comp", "sass:comp", "js:comp"])
 );
 
-gulp.task("dist:node", gulp.series(["clean", "babel"]), (done) => {
-  done();
-});
+gulp.task("dist:node", gulp.series(["clean", "babel"]));
 
 gulp.task("sync", (done) => {
   browserSync.init({
@@ -127,6 +132,4 @@ gulp.task("sync", (done) => {
   done();
 });
 
-gulp.task("default", gulp.series(["dist:web"]), (done) => {
-  done();
-});
+gulp.task("default", gulp.series(["dist:web"]));

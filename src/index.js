@@ -2,6 +2,7 @@
 /* eslint-disable */
 /* eslint-enable */
 require("./teste/teste");
+require("./debug");
 
 class Debug {
   log(text = "") {
@@ -10,6 +11,6 @@ class Debug {
 }
 const debug = new Debug();
 
-  debug.log("testing...");
+debug.log("testing...");
 
 console.log("1");
