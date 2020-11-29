@@ -120,7 +120,6 @@ gulp.task("js:bundle", () => {
     .pipe(gulp.dest("./build/js"));
 });
 
-//# COMPILE JS (browserify)
 //# COMPILE CSS/SASS
 gulp.task("sass:comp", () => {
   return gulp
@@ -176,6 +175,11 @@ gulp.task("sync", (done) => {
   gulp.watch("./src/**/*.html", gulp.parallel(["html:comp"]));
   gulp.watch("./build/**/*.*").on("change", reload);
   done();
+});
+
+//# VALIDATION
+gulp.task("check:css", () => {
+  //return gulp.src(["./build/css/style.css", "./build/*.html"]).pipe(checkCSS());
 });
 
 //# DEFAULTS
