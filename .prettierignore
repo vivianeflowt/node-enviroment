@@ -11,6 +11,7 @@ old/
 .env
 .env.example
 .env.test
+dist
 build
 scripts
 tests

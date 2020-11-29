@@ -1,8 +1,3 @@
-node_modules/
-instalar
-package.json
+node_modules
 package-lock.json
-.stylelintignore
-corrigir
-.eslintignore
 dist
