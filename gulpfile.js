@@ -120,15 +120,6 @@ gulp.task("sync", (done) => {
   done();
 });
 
-gulp.task("lint", (done) => {
-  gulp
-    .src(["./src/**/*.js", "!node_modules/**"])
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
-  done();
-});
-
 gulp.task("default", gulp.series("dist-web"), (done) => {
   done();
 });
