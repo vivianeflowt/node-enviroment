@@ -138,10 +138,10 @@ gulp.task("sync", (done) => {
       baseDir: "dist",
     },
   });
-  gulp.watch("./src/**/*.js", gulp.series(["js:bundle", "js:comp"]));
-  gulp.watch("./src/**/*.css", gulp.series(["sass:comp"]));
-  gulp.watch("./src/**/*.scss", gulp.series(["sass:comp"]));
-  gulp.watch("./src/**/*.html", gulp.series(["html:comp"]));
+  gulp.watch("./src/**/*.js", gulp.parallel(["js:bundle", "js:comp"]));
+  gulp.watch("./src/**/*.css", gulp.parallel(["sass:comp"]));
+  gulp.watch("./src/**/*.scss", gulp.parallel(["sass:comp"]));
+  gulp.watch("./src/**/*.html", gulp.parallel(["html:comp"]));
   gulp.watch("./dist/**/*.*").on("change", reload);
   done();
 });
