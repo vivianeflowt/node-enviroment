@@ -52,14 +52,12 @@ gulp.task("clean:build", (done) => {
     done();
   }, 1000);
 });
-
 gulp.task("clean:dist", (done) => {
   gulp.src("./dist/*").pipe(clean({ force: true }));
   setTimeout(() => {
     done();
   }, 1000);
 });
-
 gulp.task("clean:all", gulp.parallel(["clean:build", "clean:dist"]));
 
 //# COMPILE FOR NODE
@@ -159,7 +157,6 @@ gulp.task("html:comp", () => {
       .pipe(gulp.dest("./build"))
   );
 });
-
 gulp.task("html:inject", () => {
   return gulp
     .src("./build/**/*.html")
