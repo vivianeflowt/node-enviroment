@@ -21,40 +21,26 @@ const eslint = require("gulp-eslint");
 sass.compiler = require("node-sass");
 
 gulp.task("clean", (done) => {
-  gulp
-    .src("./dist/**/*", { read: false })
-    .pipe(clean({ force: true }))
-    .on("end", () => {
-      done();
-    });
+  gulp.src("./dist/**/*", { read: false }).pipe(clean({ force: true }));
+  done();
 });
 
 gulp.task("clean-css", (done) => {
-  gulp
-    .src("./dist/**/*.css", { read: false })
-    .pipe(clean({ force: true }))
-    .on("end", () => {
-      done();
-    });
+  gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
+  done();
 });
 
 gulp.task("clean-js", (done) => {
   gulp
     .src("./dist/**/*.js.map", { read: false })
     .pipe(gulp.src("./dist/**/*.js", { read: false }))
-    .pipe(clean({ force: true }))
-    .on("end", () => {
-      done();
-    });
+    .pipe(clean({ force: true }));
+  done();
 });
 
 gulp.task("clean-html", (done) => {
-  gulp
-    .src("./dist/**/*.html", { read: false })
-    .pipe(clean({ force: true }))
-    .on("end", () => {
-      done();
-    });
+  gulp.src("./dist/**/*.html", { read: false }).pipe(clean({ force: true }));
+  done();
 });
 
 gulp.task("babel", (done) => {
@@ -65,10 +51,8 @@ gulp.task("babel", (done) => {
         presets: ["@babel/env"],
       })
     )
-    .pipe(gulp.dest("dist"))
-    .on("end", () => {
-      done();
-    });
+    .pipe(gulp.dest("dist"));
+  done();
 });
 
 gulp.task("js-comp", (done) => {
@@ -93,10 +77,8 @@ gulp.task("js-comp", (done) => {
     .pipe(strip())
     .on("error", log.error)
     .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest("./dist/"))
-    .on("end", () => {
-      done();
-    });
+    .pipe(gulp.dest("./dist/"));
+  done();
 });
 
 gulp.task("sass-comp", (done) => {
@@ -109,20 +91,14 @@ gulp.task("sass-comp", (done) => {
     .pipe(strip())
     .pipe(cssmin())
     .pipe(rename({ suffix: ".min" }))
-    .pipe(gulp.dest("./dist"))
-    .on("end", () => {
-      done();
-    });
+    .pipe(gulp.dest("./dist"));
+  done();
 });
 
 gulp.task("html-comp", (done) => {
-  gulp
-    .src("./src/**/*.html")
-    .pipe(strip())
-    .pipe(gulp.dest("./dist"))
-    .on("end", () => {
-      done();
-    });
+  gulp.src("./src/**/*.html").pipe(strip()).pipe(gulp.dest("./dist"));
+
+  done();
 });
 
 gulp.task(
@@ -149,10 +125,8 @@ gulp.task("lint", (done) => {
     .src(["./src/**/*.js", "!node_modules/**"])
     .pipe(eslint())
     .pipe(eslint.format())
-    .pipe(eslint.failAfterError())
-    .on("end", () => {
-      done();
-    });
+    .pipe(eslint.failAfterError());
+  done();
 });
 
 gulp.task("default", gulp.series("dist-web"), (done) => {
