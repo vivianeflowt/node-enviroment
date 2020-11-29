@@ -2,8 +2,6 @@
 
 clear
 
-rm -f .git
-wait
 npm install
 wait
 npm audit fix
