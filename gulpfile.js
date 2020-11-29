@@ -23,16 +23,6 @@ const reload = browserSync.reload;
 
 sass.compiler = require("node-sass");
 
-// const paths = {
-//   styles: ["src/**/*.css", "src/**/*.scss"],
-//   scripts: {
-//     coffee: ["app/assets/scripts/**/*.coffee"],
-//     js: ["app/assets/scripts/vendor/**/*.js", "app/assets/scripts/**/*.js"],
-//   },
-//   images: ["app/assets/images/**/*"],
-//   fonts: ["app/assets/fonts/**/*"],
-// };
-
 const config = {
   js: {
     comments: false,
