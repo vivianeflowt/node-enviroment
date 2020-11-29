@@ -13,6 +13,7 @@ const debug = new Debug();
 
 debug.log("testing...");
 
+// teste comentario
 console.log("1");
 
 const func = (value) => console.log(value);
