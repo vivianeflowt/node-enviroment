@@ -37,18 +37,6 @@ gulp.task("clean", (done) => {
   }, 1000);
 });
 
-gulp.task("clean:css", () => {
-  return gulp.src("./dist/**/*.css").pipe(clean({ force: true }));
-});
-
-gulp.task("clean:js", () => {
-  return gulp.src("./dist/**/*.js").pipe(clean({ force: true }));
-});
-
-gulp.task("clean:html", () => {
-  return gulp.src("./dist/**/*.html").pipe(clean({ force: true }));
-});
-
 gulp.task("babel", () => {
   return gulp
     .src("src/**/*.js")
