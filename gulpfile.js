@@ -6,6 +6,8 @@ const sass = require("gulp-sass");
 const concat = require("gulp-concat");
 const cssmin = require("gulp-cssmin");
 const rename = require("gulp-rename");
+const htmlmin = require("gulp-htmlmin");
+const htmlclean = require("gulp-htmlclean");
 const strip = require("gulp-strip-comments");
 const browserify = require("browserify");
 const source = require("vinyl-source-stream");
@@ -49,31 +51,46 @@ gulp.task("babel", () => {
 });
 
 gulp.task("js:comp", () => {
+  return gulp
+    .src("src/**/*.js")
+    .pipe(sourcemaps.init())
+    .pipe(concat("script.js"))
+    .pipe(strip())
+    .pipe(
+      babel({
+        presets: ["@babel/env"],
+      })
+    )
+    .pipe(uglify())
+    .pipe(rename({ suffix: ".min" }))
+    .on("error", log.error)
+    .pipe(sourcemaps.write("./"))
+    .pipe(gulp.dest("./dist/js"));
+});
+
+gulp.task("js:bundle", () => {
   const bundler = browserify({
     entries: "./src/index.js",
     debug: true,
     // defining transforms here will avoid crashing your stream
     transform: [reactify],
   });
-  return (
-    bundler
-      .bundle()
-      .pipe(source("app.js"))
-      .pipe(buffer())
-      .pipe(
-        babel({
-          presets: ["@babel/env"],
-        })
-      )
-      .pipe(sourcemaps.init({ loadMaps: true }))
-      // Add transformation tasks to the pipeline here.
-      .pipe(uglify())
-      .pipe(strip())
-      .on("error", log.error)
-      .pipe(sourcemaps.write("./"))
-      .pipe(gulp.dest("./dist/js"))
-  );
-  //done();
+  return bundler
+    .bundle()
+    .pipe(source("app.js"))
+    .pipe(buffer())
+    .pipe(sourcemaps.init())
+    .pipe(
+      babel({
+        presets: ["@babel/env"],
+      })
+    )
+    .pipe(strip())
+    .pipe(uglify())
+    .pipe(rename({ suffix: ".min" }))
+    .on("error", log.error)
+    .pipe(sourcemaps.write("./"))
+    .pipe(gulp.dest("./dist/js"));
 });
 
 gulp.task("sass:comp", () => {
@@ -82,8 +99,8 @@ gulp.task("sass:comp", () => {
     .pipe(gulp.src("./src/**/*.css"))
     .pipe(sourcemaps.init())
     .pipe(concat("style.css"))
-    .pipe(sass().on("error", sass.logError))
     .pipe(strip())
+    .pipe(sass({ style: "compressed" }).on("error", sass.logError))
     .pipe(cssmin())
     .pipe(rename({ suffix: ".min" }))
     .pipe(sourcemaps.write("./"))
@@ -95,13 +112,22 @@ gulp.task("html:comp", () => {
     .src("./src/**/*.html")
     .pipe(sourcemaps.init())
     .pipe(strip())
+    .pipe(htmlclean())
+    .pipe(
+      htmlmin({
+        removeComments: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      })
+    )
     .pipe(sourcemaps.write("./"))
     .pipe(gulp.dest("./dist"));
 });
 
 gulp.task(
   "dist:web",
-  gulp.series(["clean", "html:comp", "sass:comp", "js:comp"])
+  gulp.series(["clean", "html:comp", "sass:comp", "js:bundle", "js:comp"])
 );
 
 gulp.task("dist:node", gulp.series(["clean", "babel"]));
@@ -112,7 +138,7 @@ gulp.task("sync", (done) => {
       baseDir: "dist",
     },
   });
-  gulp.watch("./src/**/*.js", gulp.series(["js:comp"]));
+  gulp.watch("./src/**/*.js", gulp.series(["js:bundle", "js:comp"]));
   gulp.watch("./src/**/*.css", gulp.series(["sass:comp"]));
   gulp.watch("./src/**/*.scss", gulp.series(["sass:comp"]));
   gulp.watch("./src/**/*.html", gulp.series(["html:comp"]));
