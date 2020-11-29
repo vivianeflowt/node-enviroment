@@ -17,6 +17,7 @@ const sourcemaps = require("gulp-sourcemaps");
 const reactify = require("reactify");
 
 const browserSync = require("browser-sync").create();
+const reload = browserSync.reload;
 
 sass.compiler = require("node-sass");
 
@@ -122,16 +123,11 @@ gulp.task("sync", (done) => {
   gulp.watch("./src/**/*.css", gulp.series(["clean:css", "sass:comp"]));
   gulp.watch("./src/**/*.scss", gulp.series(["clean:css", "sass:comp"]));
   gulp.watch("./src/**/*.html", gulp.series(["clean:html", "html:comp"]));
+  gulp.watch("./dist/**/*.html").on("change", reload);
+  gulp.watch("./dist/**/*.js").on("change", reload);
+  gulp.watch("./dist/**/*.cs").on("change", reload);
 
   done();
-});
-
-gulp.task("browser:sync", function () {
-  browserSync.init({
-    server: {
-      baseDir: "dist",
-    },
-  });
 });
 
 gulp.task("default", gulp.series(["dist:web"]), (done) => {
