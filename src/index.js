@@ -1,7 +1,10 @@
-//require("dotenv").config();
 /* eslint-disable */
+"use strict";
 /* eslint-enable */
-require("./debug");
+
+const config = require("../config");
+
+//require("./debug");
 
 class Debug {
   log(text = "") {
@@ -13,5 +16,4 @@ const debug = new Debug();
 // Babel
 debug.log("babel...");
 
-// Index
-console.log("index...");
+console.log(config);
