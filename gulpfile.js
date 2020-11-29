@@ -10,34 +10,51 @@ const cssmin = require("gulp-cssmin");
 const rename = require("gulp-rename");
 const strip = require("gulp-strip-comments");
 const browserify = require("browserify");
-var source = require("vinyl-source-stream");
-var buffer = require("vinyl-buffer");
-var log = require("gulplog");
-var uglify = require("gulp-uglify");
-var sourcemaps = require("gulp-sourcemaps");
-var reactify = require("reactify");
+const source = require("vinyl-source-stream");
+const buffer = require("vinyl-buffer");
+const log = require("gulplog");
+const uglify = require("gulp-uglify");
+const sourcemaps = require("gulp-sourcemaps");
+const reactify = require("reactify");
+const eslint = require("gulp-eslint");
 
 sass.compiler = require("node-sass");
 
 gulp.task("clean", (done) => {
-  gulp.src("./dist/**/*", { read: false }).pipe(clean({ force: true }));
-  done();
+  gulp
+    .src("./dist/**/*", { read: false })
+    .pipe(clean({ force: true }))
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task("clean-css", (done) => {
-  gulp.src("./dist/**/*.css", { read: false }).pipe(clean({ force: true }));
-  done();
+  gulp
+    .src("./dist/**/*.css", { read: false })
+    .pipe(clean({ force: true }))
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task("clean-js", (done) => {
-  gulp.src("./dist/**/*.js", { read: false }).pipe(clean({ force: true }));
-  gulp.src("./dist/**/*.js.map", { read: false }).pipe(clean({ force: true }));
-  done();
+  gulp
+    .src("./dist/**/*.js.map", { read: false })
+    .pipe(gulp.src("./dist/**/*.js", { read: false }))
+    .pipe(clean({ force: true }))
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task("clean-html", (done) => {
-  gulp.src("./dist/**/*.html", { read: false }).pipe(clean({ force: true }));
-  done();
+  gulp
+    .src("./dist/**/*.html", { read: false })
+    .pipe(clean({ force: true }))
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task("babel", (done) => {
@@ -48,8 +65,10 @@ gulp.task("babel", (done) => {
         presets: ["@babel/env"],
       })
     )
-    .pipe(gulp.dest("dist"));
-  done();
+    .pipe(gulp.dest("dist"))
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task("js-comp", (done) => {
@@ -74,9 +93,10 @@ gulp.task("js-comp", (done) => {
     .pipe(strip())
     .on("error", log.error)
     .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest("./dist/"));
-
-  done();
+    .pipe(gulp.dest("./dist/"))
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task("sass-comp", (done) => {
@@ -89,13 +109,20 @@ gulp.task("sass-comp", (done) => {
     .pipe(strip())
     .pipe(cssmin())
     .pipe(rename({ suffix: ".min" }))
-    .pipe(gulp.dest("./dist"));
-  done();
+    .pipe(gulp.dest("./dist"))
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task("html-comp", (done) => {
-  gulp.src("./src/**/*.html").pipe(strip()).pipe(gulp.dest("./dist"));
-  done();
+  gulp
+    .src("./src/**/*.html")
+    .pipe(strip())
+    .pipe(gulp.dest("./dist"))
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task(
@@ -110,11 +137,22 @@ gulp.task("dist", gulp.series("clean", "babel"), (done) => {
   done();
 });
 
-gulp.task("web-watch", (done) => {
+gulp.task("sync", (done) => {
   gulp.watch("./src/**/*.js", gulp.series("clean-js", "js-comp"));
   gulp.watch("./src/**/*.css", gulp.series("clean-css", "sass-comp"));
   gulp.watch("./src/**/*.scss", gulp.series("clean-css", "sass-comp"));
   done();
+});
+
+gulp.task("lint", (done) => {
+  gulp
+    .src(["./src/**/*.js", "!node_modules/**"])
+    .pipe(eslint())
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+    .on("end", () => {
+      done();
+    });
 });
 
 gulp.task("default", gulp.series("dist-web"), (done) => {

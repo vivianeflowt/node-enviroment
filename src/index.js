@@ -10,6 +10,6 @@ class Debug {
 }
 const debug = new Debug();
 
-debug.log("testing...");
+  debug.log("testing...");
 
 console.log("1");
