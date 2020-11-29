@@ -78,7 +78,7 @@ gulp.task("js:comp", (done) => {
     .pipe(strip())
     .on("error", log.error)
     .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest("./dist/"));
+    .pipe(gulp.dest("./dist/js"));
   done();
 });
 
@@ -92,7 +92,7 @@ gulp.task("sass:comp", (done) => {
     .pipe(strip())
     .pipe(cssmin())
     .pipe(rename({ suffix: ".min" }))
-    .pipe(gulp.dest("./dist"));
+    .pipe(gulp.dest("./dist/css"));
   done();
 });
 
@@ -109,7 +109,7 @@ gulp.task(
   }
 );
 
-gulp.task("dist", gulp.series(["clean", "babel"]), (done) => {
+gulp.task("dist:node", gulp.series(["clean", "babel"]), (done) => {
   done();
 });
 
@@ -119,14 +119,11 @@ gulp.task("sync", (done) => {
       baseDir: "dist",
     },
   });
-  gulp.watch("./src/**/*.js", gulp.series(["clean:js", "js:comp"]));
-  gulp.watch("./src/**/*.css", gulp.series(["clean:css", "sass:comp"]));
-  gulp.watch("./src/**/*.scss", gulp.series(["clean:css", "sass:comp"]));
-  gulp.watch("./src/**/*.html", gulp.series(["clean:html", "html:comp"]));
-  gulp.watch("./dist/**/*.html").on("change", reload);
-  gulp.watch("./dist/**/*.js").on("change", reload);
-  gulp.watch("./dist/**/*.cs").on("change", reload);
-
+  gulp.watch("./src/**/*.js", gulp.series(["js:comp"]));
+  gulp.watch("./src/**/*.css", gulp.series(["sass:comp"]));
+  gulp.watch("./src/**/*.scss", gulp.series(["sass:comp"]));
+  gulp.watch("./src/**/*.html", gulp.series(["html:comp"]));
+  gulp.watch("./dist/**/*.*").on("change", reload);
   done();
 });
 
