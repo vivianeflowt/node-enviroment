@@ -2,7 +2,9 @@
 
 clear
 
-rm -f .git
+rm -rf ./node_modules
+wait
+rm -rf ./package-lock.json
 wait
 npm install
 wait
