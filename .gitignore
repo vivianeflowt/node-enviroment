@@ -5,3 +5,4 @@ package-lock.json
 .stylelintignore
 corrigir
 .eslintignore
+dist
