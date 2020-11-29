@@ -1,7 +1,6 @@
 //require("dotenv").config();
 /* eslint-disable */
 /* eslint-enable */
-require("./teste/teste");
 require("./debug");
 
 class Debug {
@@ -11,11 +10,8 @@ class Debug {
 }
 const debug = new Debug();
 
-debug.log("testing...");
+// Babel
+debug.log("babel...");
 
-// teste comentario
-console.log("1");
-
-const func = (value) => console.log(value);
-
-func("testando...");
+// Index
+console.log("index...");
