@@ -17,6 +17,7 @@ const sourcemaps = require("gulp-sourcemaps");
 const reactify = require("reactify");
 const autoprefixer = require("gulp-autoprefixer");
 const gulpif = require("gulp-if");
+const inject = require("gulp-inject");
 
 const browserSync = require("browser-sync").create();
 const reload = browserSync.reload;
@@ -76,7 +77,7 @@ gulp.task("js:comp:node", () => {
 });
 
 //# COMPILE JS
-gulp.task("js:comp", () => {
+gulp.task("js:comp:alt", () => {
   return gulp
     .src("src/**/*.js")
     .pipe(sourcemaps.init())
@@ -95,7 +96,7 @@ gulp.task("js:comp", () => {
 });
 
 //# COMPILE JS (browserify)
-gulp.task("js:bundle", () => {
+gulp.task("js:comp", () => {
   const bundler = browserify({
     entries: "./src/index.js",
     debug: true,
@@ -138,27 +139,50 @@ gulp.task("sass:comp", () => {
 
 //# COMPILE HTML
 gulp.task("html:comp", () => {
+  return (
+    gulp
+      .src("./src/**/*.html")
+      .pipe(sourcemaps.init())
+      //.pipe(gulpif(!config.html.comments, strip()))
+      .pipe(
+        htmlmin({
+          collapseWhitespace: true,
+          removeTagWhitespace: true,
+          sortAttributes: true,
+          sortClassName: true,
+          html5: true,
+        })
+      )
+      .pipe(sourcemaps.write("./"))
+      .pipe(gulp.dest("./build"))
+  );
+});
+
+gulp.task("html:inject", () => {
   return gulp
-    .src("./src/**/*.html")
-    .pipe(sourcemaps.init())
-    .pipe(gulpif(!config.html.comments, strip()))
+    .src("./build/**/*.html")
     .pipe(
-      htmlmin({
-        collapseWhitespace: true,
-        removeTagWhitespace: true,
-        sortAttributes: true,
-        sortClassName: true,
-        html5: true,
+      inject(gulp.src("./build/js/*.js", { read: true }), { relative: true })
+    )
+    .pipe(
+      inject(gulp.src("./build/css/*.css", { read: true }), {
+        relative: true,
       })
     )
-    .pipe(sourcemaps.write("./"))
+    .pipe(gulpif(!config.html.comments, strip()))
     .pipe(gulp.dest("./build"));
 });
 
 //# BUILD
 gulp.task(
   "build:web",
-  gulp.series(["clean:build", "html:comp", "sass:comp", "js:bundle", "js:comp"])
+  gulp.series([
+    "clean:build",
+    "sass:comp",
+    "js:comp",
+    "html:comp",
+    "html:inject",
+  ])
 );
 gulp.task("build:node", gulp.series(["clean:build", "js:comp:node"]));
 
@@ -169,10 +193,10 @@ gulp.task("sync", (done) => {
       baseDir: "build",
     },
   });
-  gulp.watch("./src/**/*.js", gulp.parallel(["js:bundle", "js:comp"]));
-  gulp.watch("./src/**/*.css", gulp.parallel(["sass:comp"]));
-  gulp.watch("./src/**/*.scss", gulp.parallel(["sass:comp"]));
-  gulp.watch("./src/**/*.html", gulp.parallel(["html:comp"]));
+  gulp.watch("./src/**/*.js", gulp.series(["js:comp"]));
+  gulp.watch("./src/**/*.css", gulp.series(["sass:comp"]));
+  gulp.watch("./src/**/*.scss", gulp.series(["sass:comp"]));
+  gulp.watch("./src/**/*.html", gulp.series(["html:comp", "html:inject"]));
   gulp.watch("./build/**/*.*").on("change", reload);
   done();
 });
