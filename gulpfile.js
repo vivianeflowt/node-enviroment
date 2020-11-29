@@ -77,22 +77,24 @@ gulp.task("js:comp:node", () => {
 });
 
 //# COMPILE JS
-gulp.task("js:comp:alt", () => {
-  return gulp
-    .src("src/**/*.js")
-    .pipe(sourcemaps.init())
-    .pipe(concat("script.js"))
-    .pipe(
-      babel({
-        presets: ["@babel/env"],
-      })
-    )
-    .pipe(gulpif(!config.js.comments, strip()))
-    .pipe(gulpif(config.js.uglify.active, uglify(config.js.uglify.config)))
-    .pipe(rename({ suffix: ".min" }))
-    .on("error", log.error)
-    .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest("./build/js"));
+gulp.task("js:comp:partial", () => {
+  return (
+    gulp
+      .src("src/**/*.js")
+      .pipe(sourcemaps.init())
+      //.pipe(concat("script.js"))
+      .pipe(
+        babel({
+          presets: ["@babel/env"],
+        })
+      )
+      .pipe(gulpif(!config.js.comments, strip()))
+      .pipe(gulpif(config.js.uglify.active, uglify(config.js.uglify.config)))
+      .pipe(rename({ suffix: ".min" }))
+      .on("error", log.error)
+      .pipe(sourcemaps.write("./"))
+      .pipe(gulp.dest("./build/js"))
+  );
 });
 
 //# COMPILE JS (browserify)
