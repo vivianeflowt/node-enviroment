@@ -14,3 +14,7 @@ const debug = new Debug();
 debug.log("testing...");
 
 console.log("1");
+
+const func = (value) => console.log(value);
+
+func("testando...");

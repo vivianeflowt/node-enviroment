@@ -32,6 +32,7 @@ sass.compiler = require("node-sass");
 //   fonts: ["app/assets/fonts/**/*"],
 // };
 
+//# CLEAN DIST
 gulp.task("clean", (done) => {
   gulp.src("./dist/*").pipe(clean({ force: true }));
   setTimeout(() => {
@@ -39,6 +40,7 @@ gulp.task("clean", (done) => {
   }, 1000);
 });
 
+//# COMPILE FOR NODE
 gulp.task("babel", () => {
   return gulp
     .src("src/**/*.js")
@@ -47,9 +49,12 @@ gulp.task("babel", () => {
         presets: ["@babel/env"],
       })
     )
-    .pipe(gulp.dest("dist"));
+    .pipe(uglify())
+    .pipe(strip())
+    .pipe(gulp.dest("./dist"));
 });
 
+//# COMPILE JS
 gulp.task("js:comp", () => {
   return gulp
     .src("src/**/*.js")
@@ -68,6 +73,7 @@ gulp.task("js:comp", () => {
     .pipe(gulp.dest("./dist/js"));
 });
 
+//# COMPILE JS (browserify)
 gulp.task("js:bundle", () => {
   const bundler = browserify({
     entries: "./src/index.js",
@@ -93,6 +99,7 @@ gulp.task("js:bundle", () => {
     .pipe(gulp.dest("./dist/js"));
 });
 
+//# COMPILE CSS/SASS
 gulp.task("sass:comp", () => {
   return gulp
     .src("./src/**/*.scss")
@@ -107,6 +114,7 @@ gulp.task("sass:comp", () => {
     .pipe(gulp.dest("./dist/css"));
 });
 
+//# COMPILE HTML
 gulp.task("html:comp", () => {
   return gulp
     .src("./src/**/*.html")
@@ -125,13 +133,14 @@ gulp.task("html:comp", () => {
     .pipe(gulp.dest("./dist"));
 });
 
+//# BUILD
 gulp.task(
-  "dist:web",
+  "build:web",
   gulp.series(["clean", "html:comp", "sass:comp", "js:bundle", "js:comp"])
 );
+gulp.task("build:node", gulp.series(["clean", "babel"]));
 
-gulp.task("dist:node", gulp.series(["clean", "babel"]));
-
+//# BROWSER-SYNC
 gulp.task("sync", (done) => {
   browserSync.init({
     server: {
@@ -146,4 +155,6 @@ gulp.task("sync", (done) => {
   done();
 });
 
-gulp.task("default", gulp.series(["dist:web"]));
+//# DEFAULTS
+gulp.task("default", gulp.series(["build:web"]));
+//gulp.task("default", gulp.series(["build:node"]));
