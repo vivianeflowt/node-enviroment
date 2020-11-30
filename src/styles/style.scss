@@ -140,6 +140,20 @@ body {
   margin: 1%;
 }
 
+a {
+  color: rgb(195, 195, 0);
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgb(255, 255, 0);
+}
+
+a:visited {
+  color: rgb(195, 195, 0);
+  text-decoration: none;
+}
+
 h1,
 h2,
 h3,
@@ -147,4 +161,12 @@ h4,
 h5,
 h6 {}
 
-a {}
+.container {
+  margin: 0.2%;
+  padding: 0.2%;
+}
+
+.container * {
+  margin: 0.2%;
+  padding: 0.2%;
+}
