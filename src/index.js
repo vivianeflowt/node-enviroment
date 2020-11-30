@@ -2,10 +2,12 @@
 "use strict";
 /* eslint-enable */
 
+// load .env (only for node)
 const config = require("../config");
 
 require("./debug");
 
+// testing babel transpiler
 class Debug {
   log(text = "") {
     console.log(text);
@@ -13,8 +15,7 @@ class Debug {
 }
 const debug = new Debug();
 
-// Babel
+// babel class
 debug.log("babel...");
-debug.log("hugo é lega");
 
 //console.log(config);
