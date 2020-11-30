@@ -4,9 +4,9 @@ clear
 
 npm run format
 wait
-npx stylelint --fix "./src/**/*.css"
+#npx stylelint --fix "./src/**/*.css"
 wait
-npx stylelint --fix "./src/**/*.js"
+#npx stylelint --fix "./src/**/*.js"
 wait
 npm run eslint
 wait
