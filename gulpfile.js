@@ -142,17 +142,23 @@ gulp.task("html:comp", () => {
 });
 gulp.task("html:inject", () => {
   return gulp
-    .src("./build/**/*.html")
+    .src(path.join(config.html.target, "/**/*.html"))
     .pipe(
-      inject(gulp.src("./build/js/*.js", { read: true }), { relative: true })
+      inject(
+        gulp.src(path.join(config.js.target.web, "/*.js"), { read: true }),
+        { relative: true }
+      )
     )
     .pipe(
-      inject(gulp.src("./build/css/*.css", { read: true }), {
-        relative: true,
-      })
+      inject(
+        gulp.src(path.join(config.style.target, "/*.css"), { read: true }),
+        {
+          relative: true,
+        }
+      )
     )
     .pipe(gulpif(!config.html.comments, strip()))
-    .pipe(gulp.dest("./build"));
+    .pipe(gulp.dest(path.resolve(config.build)));
 });
 
 //# BUILD
