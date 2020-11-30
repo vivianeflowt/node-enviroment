@@ -122,23 +122,20 @@ gulp.task("sass:comp", () => {
 
 //# COMPILE HTML
 gulp.task("html:comp", () => {
-  return (
-    gulp
-      .src(path.resolve(config.html.source))
-      .pipe(sourcemaps.init())
-      //.pipe(gulpif(!config.html.comments, strip()))
-      .pipe(
-        htmlmin({
-          collapseWhitespace: true,
-          removeTagWhitespace: true,
-          sortAttributes: true,
-          sortClassName: true,
-          html5: true,
-        })
-      )
-      .pipe(sourcemaps.write("./"))
-      .pipe(gulp.dest(path.resolve(config.html.target)))
-  );
+  return gulp
+    .src(path.resolve(config.html.source))
+    .pipe(sourcemaps.init())
+    .pipe(
+      htmlmin({
+        collapseWhitespace: true,
+        removeTagWhitespace: true,
+        sortAttributes: true,
+        sortClassName: true,
+        html5: true,
+      })
+    )
+    .pipe(sourcemaps.write("./"))
+    .pipe(gulp.dest(path.resolve(config.html.target)));
 });
 gulp.task("html:inject", () => {
   return gulp
