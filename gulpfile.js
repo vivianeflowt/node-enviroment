@@ -26,28 +26,7 @@ const config = require("./settings/gulp.config");
 
 sass.compiler = require("node-sass");
 
-// const config = {
-//   js: {
-//     comments: false,
-//     uglify: {
-//       active: true,
-//       config: {
-//         ie8: false,
-//         compress: {
-//           drop_console: false,
-//         },
-//       },
-//     },
-//   },
-//   style: {
-//     comments: false,
-//   },
-//   html: {
-//     comments: false,
-//   },
-// };
-
-//# CLEAN DIST
+//@ clean build
 gulp.task("clean", (done) => {
   gulp.src(path.join(config.build, "/*")).pipe(clean({ force: true }));
   setTimeout(() => {
@@ -55,7 +34,7 @@ gulp.task("clean", (done) => {
   }, 1000);
 });
 
-//# COMPILE FOR NODE
+//@ compile for node
 gulp.task("js:comp:node", () => {
   return gulp
     .src(path.resolve(config.js.source.node))
@@ -64,17 +43,16 @@ gulp.task("js:comp:node", () => {
         presets: ["@babel/env"],
       })
     )
-    .pipe(gulpif(!config.js.comments, strip()))
+    .pipe(gulpif(config.js.dropComments, strip()))
     .pipe(gulpif(config.js.uglify.active, uglify(config.js.uglify.config)))
     .pipe(gulp.dest(path.resolve(config.js.target.node)));
 });
 
-//# COMPILE JS
+//@ compile for web
 gulp.task("js:comp", () => {
   const bundler = browserify({
     entries: path.resolve(config.js.bundle.entries),
-    debug: true,
-    // defining transforms here will avoid crashing your stream
+    debug: config.js.bundle.debug || false,
     transform: [reactify],
   });
   return bundler
@@ -87,7 +65,7 @@ gulp.task("js:comp", () => {
         presets: ["@babel/env"],
       })
     )
-    .pipe(gulpif(!config.js.comments, strip()))
+    .pipe(gulpif(config.js.dropComments, strip()))
     .pipe(gulpif(config.js.uglify.active, uglify(config.js.uglify.config)))
     .pipe(rename({ suffix: ".min" }))
     .on("error", log.error)
@@ -102,13 +80,13 @@ gulp.task("js:vendor", () => {
     .pipe(gulp.dest("./build/js"));
 });
 
-//# COMPILE CSS/SASS
+//@ compile sass
 gulp.task("sass:comp", () => {
   return gulp
     .src(path.resolve(config.style.source.scss))
     .pipe(sourcemaps.init())
     .pipe(concat("style.scss"))
-    .pipe(gulpif(!config.style.comments, strip()))
+    .pipe(gulpif(config.style.dropComments, strip()))
     .pipe(sass({ style: "compressed" }).on("error", sass.logError))
     .pipe(gulp.src(path.resolve(config.style.source.css)))
     .pipe(concat(config.style.bundle.name))
@@ -120,18 +98,18 @@ gulp.task("sass:comp", () => {
     .pipe(gulp.dest(path.resolve(config.style.target)));
 });
 
-//# COMPILE HTML
+//@ compile
 gulp.task("html:comp", () => {
   return gulp
     .src(path.resolve(config.html.source))
     .pipe(sourcemaps.init())
     .pipe(
       htmlmin({
-        collapseWhitespace: true,
-        removeTagWhitespace: true,
-        sortAttributes: true,
-        sortClassName: true,
-        html5: true,
+        collapseWhitespace: config.html.collapseWhitespace || true,
+        removeTagWhitespace: config.html.removeTagWhitespace || true,
+        sortAttributes: config.html.sort.attributes || true,
+        sortClassName: config.html.sort.classnames || true,
+        html5: config.html.html5 || true,
       })
     )
     .pipe(sourcemaps.write("./"))
@@ -154,18 +132,18 @@ gulp.task("html:inject", () => {
         }
       )
     )
-    .pipe(gulpif(!config.html.comments, strip()))
+    .pipe(gulpif(config.html.dropComments, strip()))
     .pipe(gulp.dest(path.resolve(config.build)));
 });
 
-//# BUILD
+//@ build
 gulp.task(
   "build:web",
   gulp.series(["clean", "sass:comp", "js:comp", "html:comp", "html:inject"])
 );
 gulp.task("build:node", gulp.series(["clean", "js:comp:node"]));
 
-//# BROWSER-SYNC
+//# browser-sync
 gulp.task("sync", (done) => {
   browserSync.init({
     server: {
@@ -180,11 +158,11 @@ gulp.task("sync", (done) => {
   done();
 });
 
-//# VALIDATION
+//@ validation TODO
 gulp.task("check:css", () => {
   //return gulp.src(["./build/css/style.css", "./build/*.html"]).pipe(checkCSS());
 });
 
-//# DEFAULTS
+//# default task
 gulp.task("default", gulp.series(["build:web"]));
 //gulp.task("default", gulp.series(["build:node"]));

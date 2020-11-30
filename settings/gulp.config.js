@@ -14,8 +14,9 @@ module.exports = {
     bundle: {
       entries: `${process.cwd()}/src/index.js`,
       name: "app.js",
+      debug: true,
     },
-    comments: false,
+    dropComments: true,
     uglify: {
       active: true,
       config: {
@@ -35,11 +36,18 @@ module.exports = {
     bundle: {
       name: "style.css",
     },
-    comments: false,
+    dropComments: true,
   },
   html: {
     source: `${process.cwd()}/src/**/*.html`,
     target: `${process.cwd()}/build/`,
-    comments: false,
+    dropComments: true,
+    html5: true,
+    sort: {
+      attributes: true,
+      classnames: true,
+    },
+    collapseWhitespace: true,
+    removeTagWhitespace: true,
   },
 };
