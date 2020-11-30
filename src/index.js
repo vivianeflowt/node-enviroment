@@ -4,7 +4,7 @@
 
 const config = require("../config");
 
-//require("./debug");
+require("./debug");
 
 class Debug {
   log(text = "") {
@@ -15,5 +15,6 @@ const debug = new Debug();
 
 // Babel
 debug.log("babel...");
+debug.log("hugo é lega");
 
-console.log(config);
+//console.log(config);

@@ -18,4 +18,5 @@ setTimeout(() => {
   }
 }, 5000);
 
+console.log("vivi é legal");
 //
