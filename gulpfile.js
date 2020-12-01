@@ -21,10 +21,10 @@ const inject = require("gulp-inject");
 const flatten = require("gulp-flatten");
 
 const image = require("gulp-image");
+const config = require("./settings/gulp.config");
 
 const browserSync = require("browser-sync").create();
 const reload = browserSync.reload;
-const config = require("./settings/gulp.config");
 
 sass.compiler = require("node-sass");
 
@@ -39,27 +39,29 @@ gulp.task("clean", (done) => {
 //@ compile for node
 gulp.task("js:comp:node", () => {
   return gulp
-    .src(path.resolve(config.js.source.node))
+    .src(path.resolve(config.js.node.source))
     .pipe(
       babel({
         presets: ["@babel/env"],
       })
     )
-    .pipe(gulpif(config.js.dropComments, strip()))
-    .pipe(gulpif(config.js.uglify.active, uglify(config.js.uglify.config)))
-    .pipe(gulp.dest(path.resolve(config.js.target.node)));
+    .pipe(gulpif(config.js.node.dropComments, strip()))
+    .pipe(
+      gulpif(config.js.node.uglify.active, uglify(config.js.node.uglify.config))
+    )
+    .pipe(gulp.dest(path.resolve(config.js.node.target)));
 });
 
 //@ compile for web
-gulp.task("js:comp", () => {
+gulp.task("js:web:bundle", () => {
   const bundler = browserify({
-    entries: path.resolve(config.js.bundle.entries),
-    debug: config.js.bundle.debug || false,
+    entries: path.resolve(config.js.web.bundle.entries),
+    debug: config.js.web.bundle.debug || false,
     transform: [reactify],
   });
   return bundler
     .bundle()
-    .pipe(source(config.js.bundle.name))
+    .pipe(source(config.js.web.bundle.name))
     .pipe(buffer())
     .pipe(sourcemaps.init())
     .pipe(
@@ -67,19 +69,25 @@ gulp.task("js:comp", () => {
         presets: ["@babel/env"],
       })
     )
-    .pipe(gulpif(config.js.dropComments, strip()))
-    .pipe(gulpif(config.js.uglify.active, uglify(config.js.uglify.config)))
+    .pipe(gulpif(config.js.web.bundle.dropComments, strip()))
+    .pipe(
+      gulpif(
+        config.js.web.bundle.uglify.active,
+        uglify(config.js.web.bundle.uglify.config)
+      )
+    )
     .pipe(rename({ suffix: ".min" }))
     .on("error", log.error)
     .pipe(sourcemaps.write("./"))
-    .pipe(gulp.dest(path.resolve(config.js.target.web)));
+    .pipe(gulp.dest(path.resolve(config.js.web.target)));
 });
-gulp.task("js:vendor", () => {
+
+gulp.task("js:web", () => {
   return gulp
-    .src("./node_modules/jquery/dist/jquery.min.js")
-    .pipe(gulpif(!config.js.comments, strip()))
+    .src(path.resolve(config.js.web.generic.source))
+    .pipe(gulpif(!config.js.web.generic.dropComments, strip()))
     .on("error", log.error)
-    .pipe(gulp.dest("./build/js"));
+    .pipe(gulp.dest(path.resolve(config.js.web.target)));
 });
 
 //@ compile sass
@@ -122,7 +130,7 @@ gulp.task("html:inject", () => {
     .src(path.join(config.html.target, "/**/*.html"))
     .pipe(
       inject(
-        gulp.src(path.join(config.js.target.web, "/*.js"), { read: true }),
+        gulp.src(path.join(config.js.web.target, "/*.js"), { read: true }),
         { relative: true }
       )
     )
@@ -158,7 +166,8 @@ gulp.task(
   gulp.series([
     "clean",
     "sass:comp",
-    "js:comp",
+    "js:web",
+    "js:web:bundle",
     "html:comp",
     "html:inject",
     "img:comp",
@@ -173,7 +182,7 @@ gulp.task("sync", (done) => {
       baseDir: "build",
     },
   });
-  gulp.watch("./src/**/*.js", gulp.series(["js:comp"]));
+  gulp.watch("./src/**/*.js", gulp.series(["js:web:bundle", "js:web"]));
   gulp.watch("./src/**/*.css", gulp.series(["sass:comp"]));
   gulp.watch("./src/**/*.scss", gulp.series(["sass:comp"]));
   gulp.watch("./src/**/*.html", gulp.series(["html:comp", "html:inject"]));
