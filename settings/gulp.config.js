@@ -51,10 +51,10 @@ module.exports = {
   },
   style: {
     source: {
-      css: `${process.cwd()}/src/**/*.css`,
-      scss: `${process.cwd()}/src/**/*.scss`,
+      css: `${process.cwd()}/src/css/*.css`,
+      scss: `${process.cwd()}/src/scss/*.scss`,
     },
-    target: `${process.cwd()}/build/css/`,
+    target: `${process.cwd()}/build/style/`,
     bundle: {
       name: "style.css",
     },
