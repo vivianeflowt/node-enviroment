@@ -8,7 +8,6 @@ temp/
 README.md
 yarn.lock
 package-lock.json
-docker-compose.yml
 .env.example
 .env.test
 tests
