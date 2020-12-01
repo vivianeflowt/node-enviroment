@@ -50,4 +50,19 @@ module.exports = {
     collapseWhitespace: true,
     removeTagWhitespace: true,
   },
+  image: {
+    source: `${process.cwd()}/src/images/*`,
+    target: `${process.cwd()}/build/img/`,
+    config: {
+      pngquant: true,
+      optipng: false,
+      zopflipng: true,
+      jpegRecompress: false,
+      mozjpeg: true,
+      gifsicle: true,
+      svgo: true,
+      concurrent: 10,
+      quiet: false,
+    },
+  },
 };

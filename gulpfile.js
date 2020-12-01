@@ -20,6 +20,8 @@ const gulpif = require("gulp-if");
 const inject = require("gulp-inject");
 const flatten = require("gulp-flatten");
 
+const image = require("gulp-image");
+
 const browserSync = require("browser-sync").create();
 const reload = browserSync.reload;
 const config = require("./settings/gulp.config");
@@ -98,7 +100,7 @@ gulp.task("sass:comp", () => {
     .pipe(gulp.dest(path.resolve(config.style.target)));
 });
 
-//@ compile
+//@ compile html
 gulp.task("html:comp", () => {
   return gulp
     .src(path.resolve(config.html.source))
@@ -136,10 +138,31 @@ gulp.task("html:inject", () => {
     .pipe(gulp.dest(path.resolve(config.build)));
 });
 
+//@ image
+
+gulp.task("img:comp", (done) => {
+  gulp
+    .src(config.image.source)
+    .pipe(image(config.image.config))
+    .pipe(flatten())
+    .pipe(gulp.dest(path.resolve(config.image.target)));
+
+  setTimeout(() => {
+    done();
+  }, 500);
+});
+
 //@ build
 gulp.task(
   "build:web",
-  gulp.series(["clean", "sass:comp", "js:comp", "html:comp", "html:inject"])
+  gulp.series([
+    "clean",
+    "sass:comp",
+    "js:comp",
+    "html:comp",
+    "html:inject",
+    "img:comp",
+  ])
 );
 gulp.task("build:node", gulp.series(["clean", "js:comp:node"]));
 
